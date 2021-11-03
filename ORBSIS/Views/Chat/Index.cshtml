@@ -1,0 +1,32 @@
+﻿@using ORBSIS.Model.ViewModel
+
+@model ChatViewModel
+
+@{
+    ViewData["Title"] = "Chat";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container text-center w-25">
+    <h5 class="text-left">Count Bro: @Model.CountBro</h5>
+    <h5 class="text-left">Count Sis: @Model.CountSis</h5>
+</div>
+
+<div class="container">
+
+    <div class="container w-25 mt-5">
+        <h1 class="text-left"><a href="./">@Model.LastMessage</a></h1>
+        <h6 class="text-secondary text-left">Sent by @Model.LastMessageAuthor at @Model.LastMessageTime</h6>
+    </div>
+
+    @if (Model.UserSigned)
+    {
+        <div class="mt-5 text-center">
+            <form asp-action="ProcessMessage" asp-controller="Chat" method="post">
+                <button name="button" value="bro" class="btn btn-primary btn-lg btn-control">Bro!</button>
+                <button name="button" value="sis" class="btn btn-danger btn-lg btn-control">Sis!</button>
+            </form>
+        </div>
+    }
+
+</div>

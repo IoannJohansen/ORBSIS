@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="~/lib/Bootstrap//css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/FontAwesome/css/all.css"/>
+    <title>Task 4</title>
+</head>
+
+<body>
+    <nav role="navigation" class="navbar navbar-dark bg-dark mb-5">
+        <p class="h4 text-light navbar-brand unselectable">Task 4</p>
+        <div class="container d-flex justify-content-end">
+            <a class="btn loginBtn" href="./"><i class="fab fa-google loginBtn"></i></a>
+            <a class="btn loginBtn" href="./"><i class="fab fa-vk loginBtn"></i></a>
+            <a class="btn loginBtn" href="./"><i class="fab fa-facebook loginBtn"></i></a>
+        </div>
+    </nav>
+
+    <main class="container">
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/js/Bootstrap.js"></script>
+</body>
+</html>
+
+
+
