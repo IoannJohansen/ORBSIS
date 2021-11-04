@@ -11,16 +11,21 @@ namespace ORBSIS.Controllers
 {
     public class ChatController : Controller
     {
-        private static string LastMessage { get; set; }
-        private static string LastMessageAuthor { get; set; }
-        private static DateTime LastMessageTime { get; set; }
-        private static int CountBro { get; set; }
-        private static int CountSis { get; set; }
-        //SignInManager<IdentityUser> _signInManager;
+        private static string LastMessage { get; set; } = "Here's empty";
 
-        public ChatController(/*SignInManager<IdentityUser> signInManager*/)
+        private static string LastMessageAuthor { get; set; } = "Johny";
+        
+        private static DateTime LastMessageTime { get; set; }
+        
+        private static int CountBro { get; set; }
+
+        private static int CountSis { get; set; }
+        
+        SignInManager<IdentityUser> _signInManager;
+
+        public ChatController(SignInManager<IdentityUser> signInManager)
         {
-            //this._signInManager = signInManager;
+            this._signInManager = signInManager;
         }
 
         public IActionResult Index()
@@ -31,12 +36,12 @@ namespace ORBSIS.Controllers
             messagesData.LastMessage = LastMessage;
             messagesData.LastMessageAuthor = LastMessageAuthor;
             messagesData.LastMessageTime = LastMessageTime.ToLongTimeString();
-            messagesData.UserSigned = /*_signInManager.IsSignedIn(User)*/true;
+            messagesData.UserSigned = User.Identity.IsAuthenticated;
             return View(messagesData);
         }
 
         [HttpPost]
-        //[Authorize]
+        [Authorize]
         public IActionResult ProcessMessage(string button)
         {
             if (button == "bro")
@@ -52,12 +57,5 @@ namespace ORBSIS.Controllers
             LastMessageTime = DateTime.Now;
             return RedirectToAction("Index");
         }
-
-        [Route("User/LoginFacebook")]
-        public IActionResult LoginFacebook()
-        {
-            return View();
-        }
-
     }
 }

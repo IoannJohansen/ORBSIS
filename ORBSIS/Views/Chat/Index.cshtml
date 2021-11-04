@@ -19,7 +19,7 @@
         <h6 class="text-secondary text-left">Sent by @Model.LastMessageAuthor at @Model.LastMessageTime</h6>
     </div>
 
-    @if (Model.UserSigned)
+    @if (User?.Identity != null && User.Identity.IsAuthenticated)
     {
         <div class="mt-5 text-center">
             <form asp-action="ProcessMessage" asp-controller="Chat" method="post">
