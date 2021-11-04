@@ -49,8 +49,9 @@ namespace ORBSIS
                 })
                 .AddGoogle(googleOptions =>
                 {
-                    googleOptions.ClientId = "255362154197-9ptg04leiini667d6bdau7nqv8efr397.apps.googleusercontent.com";
-                    googleOptions.ClientSecret = "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";
+                    googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
+                    googleOptions.ClientSecret = Configuration["Authentication:Google:AppSecret"];
+                    googleOptions.SaveTokens = true;
                     googleOptions.AccessDeniedPath = "/account/AccessDeny";
                 });
 
