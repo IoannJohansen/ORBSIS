@@ -11,9 +11,9 @@ namespace ORBSIS.Controllers
 {
     public class ChatController : Controller
     {
-        private static string LastMessage { get; set; } = "Here's empty";
+        private static string LastMessage { get; set; } = "...";
 
-        private static string LastMessageAuthor { get; set; } = "Nobody";
+        private static string LastMessageAuthor { get; set; } = "Noname";
         
         private static DateTime LastMessageTime { get; set; }
         
@@ -23,14 +23,15 @@ namespace ORBSIS.Controllers
 
         public IActionResult Index()
         {
-            var messagesData = new ChatViewModel();
-            messagesData.CountBro = CountBro;
-            messagesData.CountSis = CountSis;
-            messagesData.LastMessage = LastMessage;
-            messagesData.LastMessageAuthor = LastMessageAuthor;
-            messagesData.LastMessageTime = LastMessageTime.ToLongTimeString();
-            messagesData.UserSigned = User.Identity.IsAuthenticated;
-            return View(messagesData);
+            return View(new ChatViewModel()
+            {
+                CountBro = CountBro,
+                CountSis = CountSis,
+                LastMessage = LastMessage,
+                LastMessageAuthor = LastMessageAuthor,
+                LastMessageTime = LastMessageTime.ToLongTimeString(),
+                UserSigned = User.Identity.IsAuthenticated
+            });
         }
 
         [HttpPost]

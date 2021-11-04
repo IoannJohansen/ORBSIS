@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -31,17 +32,16 @@ namespace ORBSIS.Controllers
         [Route("account/facebook-login")]
         public IActionResult LoginFacebook()
         {
-            string provider = "Facebook";
             var redirectUrl = Url.Action(nameof(LoginFacebookCallback), "Account");
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
-            return Challenge(properties, provider);
+            var props = _signInManager.ConfigureExternalAuthenticationProperties(FacebookDefaults.AuthenticationScheme, redirectUrl);
+            return Challenge(props, FacebookDefaults.AuthenticationScheme);
         }
 
         public async Task<IActionResult> LoginFacebookCallback()
         {
             var loginInfo = await _signInManager.GetExternalLoginInfoAsync();
-            string firstName = loginInfo.Principal.FindFirstValue(ClaimTypes.GivenName);
-            string email = loginInfo.Principal.FindFirstValue(ClaimTypes.Email);
+            string firstName = loginInfo.Principal.FindFirstValue(ClaimTypes.GivenName),
+                email = loginInfo.Principal.FindFirstValue(ClaimTypes.Email);
             var user = await _userManager.FindByEmailAsync(email);
             if (user != null)
             {
@@ -51,9 +51,8 @@ namespace ORBSIS.Controllers
             else
             {
                 user = new IdentityUser { UserName = firstName, Email = email, EmailConfirmed = true };
-                var res = await CreateNewUser(user, loginInfo);
-
-                if (res)
+                var userCreatinResult = await CreateNewUser(user, loginInfo);
+                if (userCreatinResult)
                 {
                     return RedirectToAction("Index", "Chat");
                 }
@@ -95,17 +94,12 @@ namespace ORBSIS.Controllers
                 else
                 {
                     user = new IdentityUser() { UserName = name, Email = email, EmailConfirmed = true };
-                    var userCreated = await _userManager.CreateAsync(user);
-                    if (userCreated.Succeeded)
+                    var res = await CreateNewUser(user, loginInfo);
+                    if (res)
                     {
-                        var res = await CreateNewUser(user, loginInfo);
-                        if (res)
-                        {
-                            await Autorize(user, loginInfo);
-                            return RedirectToAction("Index", "Chat");
-                        }
+                        await Autorize(user, loginInfo);
+                        return RedirectToAction("Index", "Chat");
                     }
-
                 }
             }
             return RedirectToAction("AccessDeny");
@@ -113,30 +107,27 @@ namespace ORBSIS.Controllers
 
         #region Helpers
 
-        private async Task Autorize(IdentityUser identityUser, ExternalLoginInfo externalLoginInfo)
+        private async Task Autorize(IdentityUser user, ExternalLoginInfo externalLoginInfo)
         {
             var ident = new ClaimsIdentity(externalLoginInfo.Principal.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            await _signInManager.SignInAsync(identityUser, isPersistent: false);
+            await _signInManager.SignInAsync(user, isPersistent: false);
         }
 
-        private async Task<bool> CreateNewUser(IdentityUser user, ExternalLoginInfo loginInfo)
+        private async Task<bool> CreateNewUser(IdentityUser user, ExternalLoginInfo externalLoginInfo)
         {
             var userCreationResult = await _userManager.CreateAsync(user);
             if (userCreationResult.Succeeded)
             {
-                userCreationResult = await _userManager.AddLoginAsync(user, loginInfo);
+                userCreationResult = await _userManager.AddLoginAsync(user, externalLoginInfo);
                 if (userCreationResult.Succeeded)
                 {
-                    await Autorize(user, loginInfo);
+                    await Autorize(user, externalLoginInfo);
                     return true;
                 }
             }
             return false;
         }
 
-
-
         #endregion
-
     }
 }
