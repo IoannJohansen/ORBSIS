@@ -25,7 +25,10 @@ namespace ORBSIS
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>(options => {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.User.AllowedUserNameCharacters = "ÀÁÂÃÄÅ¨ÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäå¸æçèéêëìíîïğñòóôõö÷øùúûüışÿabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+            }).AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).
                 AddCookie(options =>
@@ -38,14 +41,17 @@ namespace ORBSIS
                     facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
                     facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
                     facebookOptions.SaveTokens = true;
-                    facebookOptions.AccessDeniedPath = "/Account/AccessDeny";
+                    facebookOptions.AccessDeniedPath = "/account/AccessDeny";
                 })
                 .AddGoogle(googleOptions =>
                 {
                     googleOptions.ClientId = "255362154197-9ptg04leiini667d6bdau7nqv8efr397.apps.googleusercontent.com";
                     googleOptions.ClientSecret = "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";
                 });
-                services.AddRazorPages();
+
+            services.AddMvc();
+
+            services.AddRazorPages();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

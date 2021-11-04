@@ -19,7 +19,7 @@
     transition: all 1s ease;
 }
 
-.fab {
+.fas, .fab {
     color: inherit;
     background-color: inherit;
 }

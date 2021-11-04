@@ -41,7 +41,6 @@ namespace ORBSIS.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public IActionResult ProcessMessage(string button)
         {
             if (button == "bro")
