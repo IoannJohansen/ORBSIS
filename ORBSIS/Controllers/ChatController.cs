@@ -13,20 +13,13 @@ namespace ORBSIS.Controllers
     {
         private static string LastMessage { get; set; } = "Here's empty";
 
-        private static string LastMessageAuthor { get; set; } = "Johny";
+        private static string LastMessageAuthor { get; set; } = "Nobody";
         
         private static DateTime LastMessageTime { get; set; }
         
         private static int CountBro { get; set; }
 
         private static int CountSis { get; set; }
-        
-        SignInManager<IdentityUser> _signInManager;
-
-        public ChatController(SignInManager<IdentityUser> signInManager)
-        {
-            this._signInManager = signInManager;
-        }
 
         public IActionResult Index()
         {
@@ -54,6 +47,7 @@ namespace ORBSIS.Controllers
                 CountSis++;
             }
             LastMessageTime = DateTime.Now;
+            LastMessageAuthor = HttpContext.User.Identity.Name;
             return RedirectToAction("Index");
         }
     }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ORBSIS.Data;
+using System;
 
 namespace ORBSIS
 {
@@ -33,8 +35,10 @@ namespace ORBSIS
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).
                 AddCookie(options =>
                 {
-                    options.LoginPath = "/account/facebook-login";
                     options.Cookie.Name = "AuthCookie";
+                    options.LoginPath = "/account/facebook-login";
+                    options.LoginPath = "/account/signin-google";
+                    options.Cookie.Expiration = TimeSpan.FromHours(1);
                 }).
                 AddFacebook(facebookOptions =>
                 {
@@ -47,6 +51,7 @@ namespace ORBSIS
                 {
                     googleOptions.ClientId = "255362154197-9ptg04leiini667d6bdau7nqv8efr397.apps.googleusercontent.com";
                     googleOptions.ClientSecret = "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";
+                    googleOptions.AccessDeniedPath = "/account/AccessDeny";
                 });
 
             services.AddMvc();
