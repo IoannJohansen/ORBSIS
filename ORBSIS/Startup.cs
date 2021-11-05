@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,7 +40,7 @@ namespace ORBSIS
                     options.Cookie.Name = "AuthCookie";
                     options.LoginPath = "/account/facebook-login";
                     options.LoginPath = "/account/signin-google";
-                    options.Cookie.Expiration = TimeSpan.FromHours(1);
+                    options.LoginPath = "/account/signin-github";
                 }).
                 AddFacebook(facebookOptions =>
                 {
@@ -54,10 +55,21 @@ namespace ORBSIS
                     googleOptions.ClientSecret = Configuration["Authentication:Google:AppSecret"];
                     googleOptions.SaveTokens = true;
                     googleOptions.AccessDeniedPath = "/account/AccessDeny";
+                })
+                .AddGitHub(githubOptions =>
+                {
+                    githubOptions.ClientId = Configuration["Authentication:GitHub:ClientId"];
+                    githubOptions.ClientSecret = Configuration["Authentication:GitHub:ClientSecret"];
+                    githubOptions.SaveTokens = true;
+                    githubOptions.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
+                    githubOptions.TokenEndpoint = "https://github.com/login/oauth/access_token";
+                    githubOptions.UserInformationEndpoint = "https://api.github.com/user";
                 });
 
-            services.AddSignalR();
 
+
+            services.AddSignalR();
+            
             services.AddMvc();
 
             services.AddRazorPages();
@@ -91,7 +103,6 @@ namespace ORBSIS
                     name: "default",
                     pattern: "{controller=Chat}/{action=Index}"
                 );
-
                 endpoints.MapHub<ChatHub>("/chathub");
             });
         }

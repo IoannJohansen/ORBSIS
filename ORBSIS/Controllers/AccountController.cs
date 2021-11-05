@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -101,6 +102,40 @@ namespace ORBSIS.Controllers
                 }
             }
             return RedirectToAction("AccessDeny");
+        }
+
+        [Route("account/github-login")]
+        public IActionResult LoginGithub()
+        {
+            var props = _signInManager.ConfigureExternalAuthenticationProperties("GitHub", Url.Action(nameof(LoginGithubCallback), "Account"));
+            return Challenge(props, "GitHub");
+        }
+
+        public async Task<IActionResult> LoginGithubCallback()
+        {
+            var result = await HttpContext.AuthenticateAsync("GitHub");
+            if (result.Succeeded)
+            {
+                var info = await _signInManager.GetExternalLoginInfoAsync();
+                string userName = info.Principal.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name).Value;
+                var user = await _userManager.FindByNameAsync(userName);
+                if (user == null)
+                {
+                    user = new IdentityUser { UserName = userName, Email = userName };
+                    bool creationResult = await CreateNewUser(user, info);
+                    if (creationResult)
+                    {
+                        await Autorize(user, info);
+                        return RedirectToAction("Index", "Chat");
+                    }
+                }
+                else
+                {
+                    await Autorize(user, info);
+                    return RedirectToAction("Index", "Chat");
+                }
+            }
+            return RedirectToAction("AccessDeny", "Account");
         }
 
         #region Helpers

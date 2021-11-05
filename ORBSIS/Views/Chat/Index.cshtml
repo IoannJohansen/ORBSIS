@@ -4,8 +4,6 @@
 @{
     ViewData["Title"] = "Chat";
     Layout = "~/Views/Shared/_Layout.cshtml";
-
-
 }
 
 <div class="container text-center w-25 d-flex flex-row justify-content-around">
@@ -29,7 +27,7 @@
             </form>
         </div>
 
-        <div class="toast w-25" style="position: absolute; right: 15px; top: 5em;" role="alert">
+        <div class="toast w-25 hide" style="position: absolute; right: 15px; top: 5em;" role="alert">
             <div class="toast-header bg-primary">
                 <strong class="mr-auto text-white">New message!</strong>
                 <button id="cls" class="ml-2 mb-1 close" data-dismiss="toast">
