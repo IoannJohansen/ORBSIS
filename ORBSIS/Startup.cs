@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ORBSIS.Data;
+using ORBSIS.Hubs;
 using System;
 
 namespace ORBSIS
@@ -55,6 +56,8 @@ namespace ORBSIS
                     googleOptions.AccessDeniedPath = "/account/AccessDeny";
                 });
 
+            services.AddSignalR();
+
             services.AddMvc();
 
             services.AddRazorPages();
@@ -88,6 +91,8 @@ namespace ORBSIS
                     name: "default",
                     pattern: "{controller=Chat}/{action=Index}"
                 );
+
+                endpoints.MapHub<ChatHub>("/chathub");
             });
         }
     }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using ORBSIS.Hubs;
 using ORBSIS.Model.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -21,7 +23,15 @@ namespace ORBSIS.Controllers
 
         private static int CountSis { get; set; }
 
-        public IActionResult Index()
+        private IHubContext<ChatHub> _chatHub;
+
+        public ChatController(IHubContext<ChatHub> chatHub)
+        {
+            this._chatHub = chatHub;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
             return View(new ChatViewModel()
             {
@@ -35,7 +45,7 @@ namespace ORBSIS.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProcessMessage(string button)
+        public async Task<IActionResult> ProcessMessage(string button)
         {
             if (button == "bro")
             {
@@ -49,7 +59,13 @@ namespace ORBSIS.Controllers
             }
             LastMessageTime = DateTime.Now;
             LastMessageAuthor = HttpContext.User.Identity.Name;
-            return RedirectToAction("Index");
+            await SendMessage(LastMessage, LastMessageAuthor, LastMessageTime);
+            return RedirectToAction("Index");   
+        }
+        
+        public async Task SendMessage(string message, string author, DateTime sendtime)
+        {
+            await _chatHub.Clients.All.SendAsync("Send", message, author, LastMessageTime.ToLongTimeString());
         }
     }
 }
