@@ -18,8 +18,8 @@ namespace ORBSIS.Controllers
         
         public AccountController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
         {
-            this._signInManager = signInManager;
-            this._userManager = userManager;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
         
         [Route("account/AccessDeny")]
@@ -32,8 +32,7 @@ namespace ORBSIS.Controllers
         [Route("account/facebook-login")]
         public IActionResult LoginFacebook()
         {
-            var redirectUrl = Url.Action(nameof(LoginFacebookCallback), "Account");
-            var props = _signInManager.ConfigureExternalAuthenticationProperties(FacebookDefaults.AuthenticationScheme, redirectUrl);
+            var props = _signInManager.ConfigureExternalAuthenticationProperties(FacebookDefaults.AuthenticationScheme, Url.Action(nameof(LoginFacebookCallback), "Account"));
             return Challenge(props, FacebookDefaults.AuthenticationScheme);
         }
 
@@ -72,7 +71,6 @@ namespace ORBSIS.Controllers
         public IActionResult LoginGoogle()
         {
             var props = _signInManager.ConfigureExternalAuthenticationProperties(GoogleDefaults.DisplayName, Url.Action(nameof(LoginGoogleCallback)));
-
             return Challenge(props, GoogleDefaults.AuthenticationScheme);
         }
 

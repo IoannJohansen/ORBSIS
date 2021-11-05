@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using ORBSIS.Hubs;
 using ORBSIS.Model.ViewModel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ORBSIS.Controllers
@@ -27,7 +23,7 @@ namespace ORBSIS.Controllers
 
         public ChatController(IHubContext<ChatHub> chatHub)
         {
-            this._chatHub = chatHub;
+            _chatHub = chatHub;
         }
 
         [HttpGet]
@@ -59,11 +55,11 @@ namespace ORBSIS.Controllers
             }
             LastMessageTime = DateTime.Now;
             LastMessageAuthor = HttpContext.User.Identity.Name;
-            await SendMessage(LastMessage, LastMessageAuthor, LastMessageTime);
-            return RedirectToAction("Index");   
+            await SendMessageToClient(LastMessage, LastMessageAuthor);
+            return RedirectToAction("Index");
         }
         
-        public async Task SendMessage(string message, string author, DateTime sendtime)
+        public async Task SendMessageToClient(string message, string author)
         {
             await _chatHub.Clients.All.SendAsync("Send", message, author, LastMessageTime.ToLongTimeString());
         }
