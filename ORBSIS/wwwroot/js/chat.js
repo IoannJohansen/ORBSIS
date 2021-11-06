@@ -10,7 +10,6 @@ $(document).ready(function () {
     sendButtons.forEach(button => {
         button.onclick = function () {
             connection.invoke(serverMethodName, button.value);
-            console.log("Sended");
         }
     });
 
@@ -19,7 +18,7 @@ $(document).ready(function () {
         delay: 4000
     });
 
-    connection.on("Send", function (message, author) {
+    connection.on("Notify", function (message, author) {
         notifymessage.textContent = `${message} by author: ${author}`;
         $('.toast').toast('show');
     });

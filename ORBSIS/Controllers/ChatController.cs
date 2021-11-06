@@ -6,7 +6,7 @@ namespace ORBSIS.Controllers
 {
     public class ChatController : Controller
     {
-        private static string LastMessage { get; set; } = "...";
+        private static string LastMessage { get; set; } = null;
 
         private static string LastMessageAuthor { get; set; } = "Noname";
         
