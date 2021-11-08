@@ -31,8 +31,6 @@ namespace ORBSIS
                 options.User.AllowedUserNameCharacters = "ÀÁÂÃÄÅ¨ÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäå¸æçèéêëìíîïğñòóôõö÷øùúûüışÿabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
             }).AddEntityFrameworkStores<ApplicationDbContext>();
 
-            var context = 
-
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).
                 AddCookie(options =>
                 {
@@ -64,8 +62,6 @@ namespace ORBSIS
                     githubOptions.TokenEndpoint = "https://github.com/login/oauth/access_token";
                     githubOptions.UserInformationEndpoint = "https://api.github.com/user";
                 });
-
-
 
             services.AddSignalR();
             

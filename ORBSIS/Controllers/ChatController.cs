@@ -8,7 +8,7 @@ namespace ORBSIS.Controllers
     {
         private static string LastMessage { get; set; } = null;
 
-        private static string LastMessageAuthor { get; set; } = "Noname";
+        private static string LastMessageAuthor { get; set; }
         
         private static DateTime LastMessageTime { get; set; }
         

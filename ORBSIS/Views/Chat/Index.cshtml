@@ -5,12 +5,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container text-center w-25 d-flex flex-row justify-content-around">
-    <h5 class="text-left">Bro: @Model.CountBro</h5>
-    <h5 class="text-left">Sis: @Model.CountSis</h5>
+<div class="container text-center w-50 d-flex flex-row justify-content-around">
+    <h5 class="text-left text-nowrap">Bro: @Model.CountBro</h5>
+    <h5 class="text-right text-nowrap">Sis: @Model.CountSis</h5>
 </div>
 
 <div class="container">
+    @if (User?.Identity != null && User.Identity.IsAuthenticated)
+    {
     <div class="container w-25 mt-5">
         @if (String.IsNullOrEmpty(Model.LastMessage))
         {
@@ -23,8 +25,6 @@
         }
     </div>
 
-    @if (User?.Identity != null && User.Identity.IsAuthenticated)
-    {
         <div class="mt-5 text-center">
             <form asp-action="ProcessMessage" asp-controller="Chat" method="post">
                 <button name="button" value="bro" class="btn btn-primary btn-lg btn-control">Bro!</button>
