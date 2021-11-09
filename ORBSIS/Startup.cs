@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ORBSIS.Data;
 using ORBSIS.Hubs;
-
 namespace ORBSIS
 {
     public class Startup
@@ -30,6 +29,8 @@ namespace ORBSIS
                 options.SignIn.RequireConfirmedAccount = true;
                 options.User.AllowedUserNameCharacters = "ÀÁÂÃÄÅ¨ÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäå¸æçèéêëìíîïğñòóôõö÷øùúûüışÿabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
             }).AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddCors();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).
                 AddCookie(options =>
@@ -83,11 +84,15 @@ namespace ORBSIS
                 app.UseHsts();
             }
 
+            app.UseCors(options =>
+            {
+                options.AllowAnyOrigin();
+            });
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 

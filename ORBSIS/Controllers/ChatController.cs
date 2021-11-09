@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ORBSIS.Model.ViewModel;
+using Serilog;
 using System;
 
 namespace ORBSIS.Controllers
